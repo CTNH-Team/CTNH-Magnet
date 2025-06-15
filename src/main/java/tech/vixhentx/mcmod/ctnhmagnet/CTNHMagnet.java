@@ -22,7 +22,8 @@ public class CTNHMagnet {
     }
 
     @SuppressWarnings("noinspection InstantiationOfUtilityClass")
-    public CTNHMagnet(FMLJavaModLoadingContext context) {
+    public CTNHMagnet() {
+        FMLJavaModLoadingContext context = FMLJavaModLoadingContext.get();
         CTNHMagnet.init();
         DistExecutor.unsafeRunForDist(() -> ()-> new ClientProxy(context), () -> ()-> new CommonProxy(context));
     }

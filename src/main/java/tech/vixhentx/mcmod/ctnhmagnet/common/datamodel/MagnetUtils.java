@@ -1,6 +1,4 @@
-package tech.vixhentx.mcmod.ctnhmagnet.common.model;
-
-import tech.vixhentx.mcmod.ctnhmagnet.common.model.MagnetStages.*;
+package tech.vixhentx.mcmod.ctnhmagnet.common.datamodel;
 
 public class MagnetUtils {
     public static int fastLog2(int x){
