@@ -5,6 +5,8 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "ctnhmagnet.refmap.json",
   "mixins": [
+    "gtceu.MetaMachineBlockEntityMixin",
+    "gtceu.WorkableTieredMachineMixin"
   ],
   "client": [
   ],
