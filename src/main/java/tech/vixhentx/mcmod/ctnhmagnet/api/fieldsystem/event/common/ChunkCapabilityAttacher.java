@@ -1,4 +1,4 @@
-package tech.vixhentx.mcmod.ctnhmagnet.common.event;
+package tech.vixhentx.mcmod.ctnhmagnet.api.fieldsystem.event.common;
 
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -8,21 +8,19 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tech.vixhentx.mcmod.ctnhmagnet.CTNHMagnet;
-import tech.vixhentx.mcmod.ctnhmagnet.api.capability.IMagnetChunkStorage;
-import tech.vixhentx.mcmod.ctnhmagnet.common.chunkdata.MagnetChunkStorage;
+import tech.vixhentx.mcmod.ctnhmagnet.api.fieldsystem.chunkdata.IMagnetChunkStorage;
+import tech.vixhentx.mcmod.ctnhmagnet.api.fieldsystem.chunkdata.MagnetChunkStorage;
 import tech.vixhentx.mcmod.ctnhmagnet.registry.MagnetCapabilities;
 
-@Mod.EventBusSubscriber(modid = CTNHMagnet.MODID,bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ChunkCapabilityAttacher {
     private static final ResourceLocation MAGNETIC_FIELD_ID = CTNHMagnet.ID("magnetic_field_storage");
 
-    @SubscribeEvent
     public static void onAttachChunkCapabilities(AttachCapabilitiesEvent<LevelChunk> event) {
+        if(event.getCapabilities().containsKey(MAGNETIC_FIELD_ID)) return;
+
         final MagnetChunkStorage storage = new MagnetChunkStorage(event.getObject());
         final LazyOptional<IMagnetChunkStorage> lazyOptional = LazyOptional.of(() -> storage);
 

@@ -1,14 +1,19 @@
 package tech.vixhentx.mcmod.ctnhmagnet.common;
 
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import tech.vixhentx.mcmod.ctnhmagnet.common.event.BlockEventHandler;
-import tech.vixhentx.mcmod.ctnhmagnet.common.event.ChunkCapabilityAttacher;
+import tech.vixhentx.mcmod.ctnhmagnet.CTNHMagnet;
+import tech.vixhentx.mcmod.ctnhmagnet.api.fieldsystem.event.common.ChunkCapabilityAttacher;
+import tech.vixhentx.mcmod.ctnhmagnet.api.fieldsystem.event.common.ProviderChangeEvent;
+import tech.vixhentx.mcmod.ctnhmagnet.networking.MagnetNetworking;
 import tech.vixhentx.mcmod.ctnhmagnet.registry.*;
 
+@Mod.EventBusSubscriber(modid = CTNHMagnet.MODID,bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CommonProxy {
     public CommonProxy(FMLJavaModLoadingContext context) {
         IEventBus eventBus = context.getModEventBus();
@@ -16,6 +21,8 @@ public class CommonProxy {
         init();
     }
     public static void init() {
+        MagnetNetworking.init();
+
         MagnetMachines.init();
         MagnetMultiblockMachines.init();
         MagnetBlocks.init();
@@ -23,9 +30,22 @@ public class CommonProxy {
         MagnetBlockEntities.init();
 
         MagnetRegistration.REGISTRATE.registerRegistrate();
+    }
 
-        MinecraftForge.EVENT_BUS.addListener(BlockEventHandler::onBlockPlace);
-        MinecraftForge.EVENT_BUS.addListener(BlockEventHandler::onBlockBreak);
+    //event
+    @SubscribeEvent
+    public static void onAttachCapabilities(AttachCapabilitiesEvent<LevelChunk> event) {
+        ChunkCapabilityAttacher.onAttachChunkCapabilities(event);
+    }
+
+    @SubscribeEvent
+    public static void onBlockPlace(BlockEvent.EntityPlaceEvent event){
+        ProviderChangeEvent.onAddProvider(event);
+    }
+
+    @SubscribeEvent
+    public static void onBlockBreak(BlockEvent.BreakEvent event){
+        ProviderChangeEvent.onRemoveProvider(event);
     }
 
 }

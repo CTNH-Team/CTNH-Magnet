@@ -2,6 +2,7 @@ package tech.vixhentx.mcmod.ctnhmagnet.registry;
 
 import net.minecraftforge.common.capabilities.*;
 import tech.vixhentx.mcmod.ctnhmagnet.api.capability.*;
+import tech.vixhentx.mcmod.ctnhmagnet.api.fieldsystem.chunkdata.IMagnetChunkStorage;
 
 public class MagnetCapabilities {
     public static final Capability<IMagnetProvider> CAPABILITY_MAGNET_PROVIDER = CapabilityManager.get(new CapabilityToken<>(){});

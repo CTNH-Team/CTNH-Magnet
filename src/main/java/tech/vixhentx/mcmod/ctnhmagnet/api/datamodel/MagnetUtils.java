@@ -1,4 +1,4 @@
-package tech.vixhentx.mcmod.ctnhmagnet.common.datamodel;
+package tech.vixhentx.mcmod.ctnhmagnet.api.datamodel;
 
 public class MagnetUtils {
     public static int fastLog2(int x){

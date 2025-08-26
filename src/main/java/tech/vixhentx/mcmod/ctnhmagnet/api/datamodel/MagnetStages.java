@@ -1,4 +1,4 @@
-package tech.vixhentx.mcmod.ctnhmagnet.common.datamodel;
+package tech.vixhentx.mcmod.ctnhmagnet.api.datamodel;
 
 import net.minecraft.util.Mth;
 

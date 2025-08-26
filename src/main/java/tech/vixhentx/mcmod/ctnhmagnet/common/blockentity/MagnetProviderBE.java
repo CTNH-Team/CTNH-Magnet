@@ -10,7 +10,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import tech.vixhentx.mcmod.ctnhmagnet.api.capability.IMagnetProvider;
-import tech.vixhentx.mcmod.ctnhmagnet.common.datamodel.MagnetVector;
+import tech.vixhentx.mcmod.ctnhmagnet.api.datamodel.MagnetVector;
 import tech.vixhentx.mcmod.ctnhmagnet.registry.MagnetCapabilities;
 
 public class MagnetProviderBE extends BlockEntity implements IMagnetProvider {

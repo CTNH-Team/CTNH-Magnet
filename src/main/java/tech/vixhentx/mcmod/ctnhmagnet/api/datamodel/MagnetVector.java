@@ -1,4 +1,4 @@
-package tech.vixhentx.mcmod.ctnhmagnet.common.datamodel;
+package tech.vixhentx.mcmod.ctnhmagnet.api.datamodel;
 
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -10,6 +10,11 @@ public class MagnetVector extends Vector3f implements INBTSerializable<CompoundT
     public MagnetVector() {
         super();
     }
+
+    public MagnetVector(float x, float y, float z) {
+        super(x, y, z);
+    }
+
     public MagnetVector(Vector3f vec) {
         super(vec);
     }
@@ -17,6 +22,7 @@ public class MagnetVector extends Vector3f implements INBTSerializable<CompoundT
         Vector3f v = direction.step();
         set(v.mul(OEt));
     }
+    public static final MagnetVector ZERO = new MagnetVector(0,0,0);
     public int strength(@NotNull Direction direction){
         Vector3f dir = direction.step();
         return (int) (dir.dot(this));

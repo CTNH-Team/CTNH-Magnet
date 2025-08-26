@@ -1,4 +1,4 @@
-package tech.vixhentx.mcmod.ctnhmagnet.client.event;
+package tech.vixhentx.mcmod.ctnhmagnet.api.fieldsystem.event.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -11,10 +11,12 @@ import net.minecraft.util.Mth;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
-import tech.vixhentx.mcmod.ctnhmagnet.api.utils.MagnetFieldManager;
-import tech.vixhentx.mcmod.ctnhmagnet.common.datamodel.MagnetVector;
+import tech.vixhentx.mcmod.ctnhmagnet.api.datamodel.MagnetVector;
+
+import static tech.vixhentx.mcmod.ctnhmagnet.api.fieldsystem.manager.MagnetFieldManagerSelector.getClientManager;
 
 public class MagnetFieldRenderEvent {
+    //AI太好用了你们知道吗
     public static void tick(RenderLevelStageEvent event){
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) {
             PoseStack poseStack = event.getPoseStack();
@@ -36,22 +38,18 @@ public class MagnetFieldRenderEvent {
             int minColor = 0xFF0000FF; // 蓝色（弱场）
             int maxColor = 0xFFFF0000; // 红色（强场）
 
-            // 创建顶点消费者
             VertexConsumer lineConsumer = bufferSource.getBuffer(RenderType.lines());
             VertexConsumer arrowConsumer = bufferSource.getBuffer(RenderType.LINE_STRIP);
 
-            // 获取当前帧的变换矩阵
             Matrix4f poseMatrix = poseStack.last().pose();
             Matrix3f normalMatrix = poseStack.last().normal();
-
-            // 遍历所有磁场矢量
 
             var mc = Minecraft.getInstance();
             var player = mc.player;
             if (player == null || mc.level == null) return;
 
-            var map = MagnetFieldManager.getMagnetFields(player.getOnPos(), mc.level);
-            if (map == null || map.isEmpty()) return;
+            var map = getClientManager(mc.level).getChunkMagnetFields(player.blockPosition());
+            if (map.isEmpty()) return;
 
             for (var entry : map.long2ObjectEntrySet()) {
                 BlockPos pos = BlockPos.of(entry.getLongKey());

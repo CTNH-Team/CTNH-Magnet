@@ -1,40 +1,24 @@
-package tech.vixhentx.mcmod.ctnhmagnet.common.chunkdata;
+package tech.vixhentx.mcmod.ctnhmagnet.api.fieldsystem.chunkdata;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import lombok.Getter;
-import net.minecraft.core.BlockPos;
+import lombok.Setter;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.level.chunk.LevelChunk;
-import tech.vixhentx.mcmod.ctnhmagnet.api.capability.IMagnetChunkStorage;
-import tech.vixhentx.mcmod.ctnhmagnet.common.datamodel.MagnetVector;
+import org.jetbrains.annotations.Nullable;
+import tech.vixhentx.mcmod.ctnhmagnet.api.datamodel.MagnetVector;
 
 public class MagnetChunkStorage implements IMagnetChunkStorage {
-    @Getter
-    private final Long2ObjectMap<MagnetVector> magnetFields = new Long2ObjectOpenHashMap<>();
+    @Getter @Setter @Nullable
+    private Long2ObjectMap<MagnetVector> magnetFields = null;
     private final LevelChunk chunk;
 
     public MagnetChunkStorage(LevelChunk chunk) {
         this.chunk = chunk;
-    }
-
-    @Override
-    public void setMagnetField(BlockPos pos, MagnetVector magnetVector) {
-        IMagnetChunkStorage.super.setMagnetField(pos, magnetVector);
-        chunk.setUnsaved(true);
-    }
-
-    @Override
-    public void removeMagnetField(BlockPos pos) {
-        IMagnetChunkStorage.super.removeMagnetField(pos);
-        chunk.setUnsaved(true);
-    }
-
-    @Override
-    public void clear() {
-        IMagnetChunkStorage.super.clear();
-        chunk.setUnsaved(true);
+        if(!chunk.getLevel().isClientSide())
+            magnetFields = new Long2ObjectOpenHashMap<>();
     }
 
     @Override
@@ -63,5 +47,10 @@ public class MagnetChunkStorage implements IMagnetChunkStorage {
                 magnetFields.put(pos, magnetVector);
             }
         }
+    }
+
+    @Override
+    public void markDirty() {
+        chunk.setUnsaved(true);
     }
 }
