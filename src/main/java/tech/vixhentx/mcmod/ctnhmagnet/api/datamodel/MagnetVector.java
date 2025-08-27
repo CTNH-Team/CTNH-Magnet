@@ -4,6 +4,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 import org.joml.Vector3f;
 
 public class MagnetVector extends Vector3f implements INBTSerializable<CompoundTag> {
@@ -22,6 +23,7 @@ public class MagnetVector extends Vector3f implements INBTSerializable<CompoundT
         Vector3f v = direction.step();
         set(v.mul(OEt));
     }
+    @Unmodifiable
     public static final MagnetVector ZERO = new MagnetVector(0,0,0);
     public int strength(@NotNull Direction direction){
         Vector3f dir = direction.step();

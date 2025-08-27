@@ -8,14 +8,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.jetbrains.annotations.Unmodifiable;
 import tech.vixhentx.mcmod.ctnhmagnet.api.fieldsystem.chunkdata.MagnetChunkClientCache;
 import tech.vixhentx.mcmod.ctnhmagnet.api.datamodel.MagnetVector;
 import tech.vixhentx.mcmod.ctnhmagnet.networking.packet.C2S.ChunkMagnetFieldRequestPacket;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.ArrayList;
-import java.util.List;
 
 import static tech.vixhentx.mcmod.ctnhmagnet.networking.MagnetNetworking.NETWORK;
 
@@ -58,8 +55,8 @@ final class MagnetFieldManagerClient extends AbstractMagnetFieldManager {
 
     //only for receiving packet
     @Override
-    public void setMagnetFields(List<Long2ObjectMap.Entry<MagnetVector>> magnetFields) {
-        for(var entry : magnetFields){
+    public void setMagnetFields(Long2ObjectMap<MagnetVector> magnetFields) {
+        for(var entry : magnetFields.long2ObjectEntrySet()){
             BlockPos pos = BlockPos.of(entry.getLongKey());
             ChunkPos chunkPos = new ChunkPos(pos);
             var vec = entry.getValue();
@@ -72,12 +69,50 @@ final class MagnetFieldManagerClient extends AbstractMagnetFieldManager {
     }
 
     @Override
-    public @Unmodifiable List<Long2ObjectMap.Entry<MagnetVector>> getMagnetFields(LongList pos) {
-        List<Long2ObjectMap.Entry<MagnetVector>> ret = new ArrayList<>();
+    public Long2ObjectMap<MagnetVector> getMagnetFields(LongList pos) {
+        Long2ObjectMap<MagnetVector> ret = new Long2ObjectOpenHashMap<>();
         for(long p : pos){
             var chunkStorage = getChunkMagnetFields(BlockPos.of(p));
-            ret.add(new AbstractLong2ObjectMap.BasicEntry<>(p,chunkStorage.getOrDefault(p, MagnetVector.ZERO)));
+            ret.put(p,chunkStorage.getOrDefault(p, new MagnetVector()));
         }
         return ret;
+    }
+
+    @Override
+    public void accumulateMagnetFields(Long2ObjectMap<MagnetVector> toAdds) {
+        for(var entry : toAdds.long2ObjectEntrySet()){
+            BlockPos pos = BlockPos.of(entry.getLongKey());
+            MagnetVector vec = entry.getValue();
+            getChunkMagnetFields(pos).getOrDefault(pos.asLong(),new MagnetVector()).add(vec);
+        }
+    }
+
+    @Override
+    public void dispersalMagnetFields(Long2ObjectMap<MagnetVector> toSubs) {
+        for(var entry : toSubs.long2ObjectEntrySet()){
+            BlockPos pos = BlockPos.of(entry.getLongKey());
+            MagnetVector vec = entry.getValue();
+            getChunkMagnetFields(pos).getOrDefault(pos.asLong(),new MagnetVector()).sub(vec);
+        }
+    }
+
+    @Override
+    public MagnetVector getMagnetField(BlockPos pos) {
+        return getChunkMagnetFields(pos).getOrDefault(pos.asLong(),new MagnetVector());
+    }
+
+    @Override
+    public void setMagnetField(BlockPos pos, MagnetVector magnetVector) {
+        getChunkMagnetFields(pos).put(pos.asLong(), magnetVector);
+    }
+
+    @Override
+    public void accumulateMagnetField(BlockPos pos, MagnetVector toAdd) {
+        getMagnetField(pos).add(toAdd);
+    }
+
+    @Override
+    public void dispersalMagnetField(BlockPos pos, MagnetVector toSub) {
+        getMagnetField(pos).sub(toSub);
     }
 }
