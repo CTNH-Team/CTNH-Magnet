@@ -11,11 +11,14 @@ import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import tech.vixhentx.mcmod.ctnhmagnet.api.capability.IMagnetProvider;
 import tech.vixhentx.mcmod.ctnhmagnet.api.datamodel.MagnetVector;
+import tech.vixhentx.mcmod.ctnhmagnet.api.fieldsystem.spread.MagnetFieldSpreader;
 import tech.vixhentx.mcmod.ctnhmagnet.registry.MagnetCapabilities;
 
 public class MagnetProviderBE extends BlockEntity implements IMagnetProvider {
-    @Getter @Setter
-    int OEt=10;
+    @Getter
+    private final float strength = 32.0f;
+    @Getter
+    private final MagnetFieldSpreader spreader = new MagnetFieldSpreader(this);
     public MagnetProviderBE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
     }
@@ -29,7 +32,7 @@ public class MagnetProviderBE extends BlockEntity implements IMagnetProvider {
 
     @Override
     public MagnetVector getMagnetField() {
-        return new MagnetVector(OEt,Direction.NORTH);
+        return new MagnetVector(strength,Direction.NORTH);
     }
 
 }

@@ -19,9 +19,9 @@ public class MagnetVector extends Vector3f implements INBTSerializable<CompoundT
     public MagnetVector(Vector3f vec) {
         super(vec);
     }
-    public MagnetVector(int OEt,Direction direction){
+    public MagnetVector(float strength,Direction direction){
         Vector3f v = direction.step();
-        set(v.mul(OEt));
+        set(v.mul(strength));
     }
     @Unmodifiable
     public static final MagnetVector ZERO = new MagnetVector(0,0,0);
