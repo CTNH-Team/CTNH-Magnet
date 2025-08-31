@@ -13,15 +13,11 @@ public class CapInfoUtils {
     public static Optional<IMagnetProvider> getMagnetProvider(Level level, BlockPos pos) {
         if(level.getBlockEntity(pos) instanceof IMagnetProvider provider)
             return Optional.of(provider);
-        else if(level.getBlockState(pos).getBlock() instanceof IMagnetProvider provider)
-            return Optional.of(provider);
 
         return Optional.empty();
     }
     public static Optional<IMagnetReceiver> getMagnetReceiver(Level level, BlockPos pos) {
         if(level.getBlockEntity(pos) instanceof IMagnetReceiver receiver)
-            return Optional.of(receiver);
-        else if(level.getBlockState(pos).getBlock() instanceof IMagnetReceiver receiver)
             return Optional.of(receiver);
 
         return Optional.empty();

@@ -1,24 +1,18 @@
 package tech.vixhentx.mcmod.ctnhmagnet.api.capability;
 
-import net.minecraft.core.BlockPos;
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import org.jetbrains.annotations.Unmodifiable;
+import org.openjdk.nashorn.internal.objects.annotations.Getter;
 import tech.vixhentx.mcmod.ctnhmagnet.api.datamodel.MagnetVector;
 import tech.vixhentx.mcmod.ctnhmagnet.api.fieldsystem.spread.MagnetFieldSpreader;
 
 public interface IMagnetProvider {
-    float getStrength();
-    MagnetVector getMagnetField();
+    @Unmodifiable
+    Long2ObjectMap<MagnetVector> getMagnetSources();
+    @Getter
     MagnetFieldSpreader getSpreader();
-    default BlockEntity getHolder(){
-        return (BlockEntity) this;
-    }
-    default Level getLevel(){
-        return getHolder().getLevel();
-    }
-    default BlockPos getPos(){
-        return getHolder().getBlockPos();
-    }
+    Level getLevel();
     default void spread(){
         getSpreader().spread();
     }
