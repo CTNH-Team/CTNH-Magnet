@@ -3,6 +3,8 @@ package tech.vixhentx.mcmod.ctnhmagnet.api.fieldsystem.spread;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.minecraft.core.BlockPos;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 import tech.vixhentx.mcmod.ctnhmagnet.api.capability.IMagnetProvider;
 import tech.vixhentx.mcmod.ctnhmagnet.api.datamodel.MagnetVector;
 import tech.vixhentx.mcmod.ctnhmagnet.api.fieldsystem.manager.MagnetFieldManagerSelector;
@@ -30,10 +32,16 @@ public abstract class MagnetFieldSpreader {
         return derivedFields;
     }
     public abstract Long2ObjectMap<MagnetVector> deriveSingle(BlockPos sourcePos, MagnetVector sourceField);
-    public void spread() {
+    @NotNull @Unmodifiable
+    final public Long2ObjectMap<MagnetVector> spread() {
         MagnetFieldManagerSelector.getManager(provider.getLevel()).accumulateMagnetFields(getDerivedFields());
+        return derivedFields;
     }
-    public void unspread() {
+    @NotNull @Unmodifiable
+    final public Long2ObjectMap<MagnetVector> unspread() {
         MagnetFieldManagerSelector.getManager(provider.getLevel()).dispersalMagnetFields(getDerivedFields());
+        var ret =derivedFields;
+        derivedFields = null;
+        return ret;
     }
 }

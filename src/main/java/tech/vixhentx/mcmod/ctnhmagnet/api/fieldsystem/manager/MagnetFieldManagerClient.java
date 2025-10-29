@@ -30,9 +30,11 @@ final class MagnetFieldManagerClient extends AbstractMagnetFieldManager {
         if(storage != null) return storage;
 
         //null means unsynced
+        if(level.getGameTime() % 10 == 0){
         var packet = new ChunkMagnetFieldRequestPacket();
         packet.chunkToRequest = chunkPos;
         NETWORK.sendToServer(packet);
+        }
 
         return new Long2ObjectOpenHashMap<>();
     }
@@ -78,27 +80,30 @@ final class MagnetFieldManagerClient extends AbstractMagnetFieldManager {
         return ret;
     }
 
+    //only for receiving packet
     @Override
     public void accumulateMagnetFields(Long2ObjectMap<MagnetVector> toAdds) {
         for(var entry : toAdds.long2ObjectEntrySet()){
             BlockPos pos = BlockPos.of(entry.getLongKey());
             MagnetVector vec = entry.getValue();
-            getChunkMagnetFields(pos).getOrDefault(pos.asLong(),new MagnetVector()).add(vec);
+            getChunkMagnetFields(pos).computeIfAbsent(pos.asLong(),__->new MagnetVector()).add(vec);
         }
     }
 
+    //only for receiving packet
     @Override
     public void dispersalMagnetFields(Long2ObjectMap<MagnetVector> toSubs) {
         for(var entry : toSubs.long2ObjectEntrySet()){
             BlockPos pos = BlockPos.of(entry.getLongKey());
             MagnetVector vec = entry.getValue();
-            getChunkMagnetFields(pos).getOrDefault(pos.asLong(),new MagnetVector()).sub(vec);
+            getChunkMagnetFields(pos).computeIfAbsent(pos.asLong(),__->new MagnetVector()).sub(vec);
         }
     }
 
+    //modifiable
     @Override
     public MagnetVector getMagnetField(BlockPos pos) {
-        return getChunkMagnetFields(pos).getOrDefault(pos.asLong(),new MagnetVector());
+        return getChunkMagnetFields(pos).computeIfAbsent(pos.asLong(),__->new MagnetVector());
     }
 
     @Override

@@ -44,6 +44,6 @@ public class MagnetFieldSyncPacket implements IPacket {
     @Override
     public void execute(IHandlerContext handler) {
         //handle on client
-        getClientManager(handler.getLevel()).setMagnetFields(changes);
+        getClientManager(handler.getLevel()).accumulateMagnetFields(changes);
     }
 }

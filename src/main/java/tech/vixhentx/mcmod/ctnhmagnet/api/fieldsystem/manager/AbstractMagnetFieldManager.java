@@ -8,10 +8,10 @@ import net.minecraft.core.*;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
+import org.jetbrains.annotations.Unmodifiable;
 import tech.vixhentx.mcmod.ctnhmagnet.api.datamodel.MagnetVector;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.List;
 
 
 @ParametersAreNonnullByDefault
@@ -49,4 +49,23 @@ public sealed abstract class AbstractMagnetFieldManager permits MagnetFieldManag
     public abstract void accumulateMagnetField(BlockPos pos, MagnetVector toAdd);
     public abstract void dispersalMagnetField(BlockPos pos, MagnetVector toSub);
 
+
+    /// //////////////////////////////
+    ///           Utils           ///
+    /// /////////////////////////////
+
+    @ParametersAreNonnullByDefault
+    public static void accumulate(@Unmodifiable Long2ObjectMap<MagnetVector> in, Long2ObjectMap<MagnetVector> dest){
+        for(Long2ObjectMap.Entry<MagnetVector> entry : in.long2ObjectEntrySet()){
+            dest.computeIfAbsent(entry.getLongKey(), __->new MagnetVector())
+                    .add(entry.getValue());
+        }
+    }
+    @ParametersAreNonnullByDefault
+    public static void dispersal(@Unmodifiable Long2ObjectMap<MagnetVector> in, Long2ObjectMap<MagnetVector> dest){
+        for(Long2ObjectMap.Entry<MagnetVector> entry : in.long2ObjectEntrySet()){
+            dest.computeIfAbsent(entry.getLongKey(), __->new MagnetVector())
+                    .sub(entry.getValue());
+        }
+    }
 }

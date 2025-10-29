@@ -12,6 +12,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import tech.vixhentx.mcmod.ctnhmagnet.api.capability.IMagnetProvider;
+import tech.vixhentx.mcmod.ctnhmagnet.api.datamodel.MagnetPriority;
 import tech.vixhentx.mcmod.ctnhmagnet.api.datamodel.MagnetVector;
 import tech.vixhentx.mcmod.ctnhmagnet.api.fieldsystem.spread.MagnetFieldSpreader;
 import tech.vixhentx.mcmod.ctnhmagnet.api.fieldsystem.spread.RoundDeviantSpreader;
@@ -39,5 +40,15 @@ public class MagnetProviderBE extends BlockEntity implements IMagnetProvider {
         map.put(getBlockPos().relative(Direction.NORTH).asLong(), new MagnetVector(strength, Direction.NORTH));
         map.put(getBlockPos().relative(Direction.SOUTH).asLong(), new MagnetVector(strength, Direction.NORTH));
         return map;
+    }
+
+    @Override
+    public int getPriority() {
+        return MagnetPriority.STATIC.priority();
+    }
+
+    @Override
+    public BlockPos getPos() {
+        return worldPosition;
     }
 }
